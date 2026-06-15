@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 import { StepProgress } from '@/components/layout/StepProgress'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
+import { ReelsThumbnail } from '@/components/ui/ReelsThumbnail'
 import { useReelsStore } from '@/lib/store'
 import { GeneratedImage } from '@/lib/types'
 import { track } from '@/lib/mixpanel'
@@ -44,8 +44,13 @@ export default function Step3Page() {
     }
   }
 
+  useEffect(() => {
+    if (!selectedTopicId) {
+      router.replace('/step/1')
+    }
+  }, [selectedTopicId, router])
+
   if (!selectedTopicId) {
-    router.replace('/step/1')
     return null
   }
 
@@ -83,14 +88,8 @@ export default function Step3Page() {
           </div>
         ) : currentImage ? (
           <div className="animate-fade-in">
-            <div className="relative w-full aspect-[4/5] bg-gray-100 overflow-hidden">
-              <Image
-                src={currentImage.url}
-                alt="생성된 이미지"
-                fill
-                className="object-cover"
-                unoptimized
-              />
+            <div className="relative w-full aspect-[4/5] bg-black overflow-hidden rounded-lg">
+              <ReelsThumbnail keywords={selectedKeywordTexts} className="w-full h-full" />
             </div>
             <div className="mt-3 p-3 bg-gray-50 border border-gray-100">
               <p className="text-xs text-gray-400 font-mono leading-relaxed">
@@ -99,13 +98,11 @@ export default function Step3Page() {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-4 py-24 border border-dashed border-gray-200">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="text-gray-300">
-              <rect x="4" y="4" width="24" height="24" rx="2" stroke="currentColor" strokeWidth="1.5" />
-              <circle cx="12" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.5" />
-              <path d="M4 22L10 16L14 20L20 14L28 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <p className="text-sm text-gray-400">아래 버튼을 눌러 이미지를 생성하세요</p>
+          <div className="flex flex-col gap-4">
+            <div className="relative w-full aspect-[4/5] bg-black overflow-hidden rounded-lg">
+              <ReelsThumbnail showPlaceholder={true} className="w-full h-full" />
+            </div>
+            <p className="text-xs text-gray-400 text-center">아래 버튼을 눌러 이미지를 생성하세요</p>
           </div>
         )}
       </div>

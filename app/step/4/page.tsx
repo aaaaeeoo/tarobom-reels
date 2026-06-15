@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { StepProgress } from '@/components/layout/StepProgress'
 import { Button } from '@/components/ui/Button'
@@ -39,8 +39,13 @@ export default function Step4Page() {
     }
   }
 
+  useEffect(() => {
+    if (!selectedTopicId) {
+      router.replace('/step/1')
+    }
+  }, [selectedTopicId, router])
+
   if (!selectedTopicId) {
-    router.replace('/step/1')
     return null
   }
 

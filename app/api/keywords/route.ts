@@ -12,7 +12,7 @@ const keywordSetsByTopic: Record<string, DMKeywordSet[]> = {
   '2': [
     { id: 'ks2-1', topicId: '2', keywords: ['초록', '파랑', '흰색'] },
     { id: 'ks2-2', topicId: '2', keywords: ['눈', '비', '구름'] },
-    { id: 'ks2-3', topicId: '2', keywords: ['커피', '책', '창문'] },
+    { id: 'ks2-3', topicId: '2', keywords: ['커피', '녹차', '홍차'] },
     { id: 'ks2-4', topicId: '2', keywords: ['주황', '분홍', '연두'] },
     { id: 'ks2-5', topicId: '2', keywords: ['산', '바다', '숲'] },
   ],

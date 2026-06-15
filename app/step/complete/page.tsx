@@ -1,7 +1,8 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
+import { ReelsThumbnail } from '@/components/ui/ReelsThumbnail'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { useReelsStore } from '@/lib/store'
@@ -32,8 +33,13 @@ export default function CompletePage() {
     router.push('/')
   }
 
+  useEffect(() => {
+    if (!topic) {
+      router.replace('/')
+    }
+  }, [topic, router])
+
   if (!topic) {
-    router.replace('/')
     return null
   }
 
@@ -106,13 +112,10 @@ export default function CompletePage() {
         {image && (
           <div className="bg-white p-6 col-span-2">
             <span className="text-xs text-gray-400 font-mono block mb-3">생성 이미지</span>
-            <div className="relative w-48 aspect-[4/5] overflow-hidden bg-gray-100">
-              <Image
-                src={image.url}
-                alt="생성된 이미지"
-                fill
-                className="object-cover"
-                unoptimized
+            <div className="relative w-48 aspect-[4/5] overflow-hidden bg-black rounded-lg">
+              <ReelsThumbnail
+                keywords={selectedKeywordSet?.keywords ?? []}
+                className="w-full h-full"
               />
             </div>
           </div>

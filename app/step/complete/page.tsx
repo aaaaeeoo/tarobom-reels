@@ -72,6 +72,18 @@ export default function CompletePage() {
         const proxyUrl = `/api/download-image?url=${encodeURIComponent(imageUrl)}&filename=${encodeURIComponent(`릴스_이미지_${i + 1}_${kw}.jpg`)}`
         await triggerDownload(proxyUrl, `릴스_이미지_${i + 1}_${kw}.jpg`)
       }
+
+      // 음악 다운로드 (Gemini가 생성한 경우에만)
+      if (track?.audioBase64) {
+        await new Promise((r) => setTimeout(r, 300))
+        const audioBlob = new Blob(
+          [Uint8Array.from(atob(track.audioBase64), (c) => c.charCodeAt(0))],
+          { type: 'audio/mpeg' }
+        )
+        const audioUrl = URL.createObjectURL(audioBlob)
+        await triggerDownload(audioUrl, `릴스_배경음악_${track.title}.mp3`)
+        URL.revokeObjectURL(audioUrl)
+      }
     } finally {
       setDownloading(false)
     }

@@ -29,7 +29,7 @@ export default function Step4Page() {
       const res = await fetch('/api/music', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topicId: selectedTopicId }),
+        body: JSON.stringify({ topicId: selectedTopicId, topicTitle: selectedTopic?.title }),
       })
       const data: GeneratedMusic[] = await res.json()
       setMusic(data)

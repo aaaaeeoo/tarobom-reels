@@ -26,4 +26,5 @@ export interface GeneratedMusic {
   mood: string
   duration: number
   bpm: number
+  audioBase64?: string
 }

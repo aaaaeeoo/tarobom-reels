@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { useReelsStore } from '@/lib/store'
 import { DMKeyword } from '@/lib/types'
+import { track } from '@/lib/mixpanel'
 
 const categoryLabel: Record<DMKeyword['category'], string> = {
   trigger: 'DM 트리거',
@@ -82,7 +83,11 @@ export default function Step2Page() {
                   return (
                     <button
                       key={kw.id}
-                      onClick={() => toggleKeyword(kw.id)}
+                      onClick={() => {
+                          const action = selectedKeywordIds.includes(kw.id) ? 'deselected' : 'selected'
+                          track('Keyword Toggled', { keyword: kw.keyword, action })
+                          toggleKeyword(kw.id)
+                        }}
                       className={[
                         'px-3 py-1.5 text-sm font-mono transition-colors border',
                         isSelected
@@ -111,7 +116,10 @@ export default function Step2Page() {
             이전
           </Button>
           <Button
-            onClick={() => router.push('/step/3')}
+            onClick={() => {
+              track('Step 2 Next Clicked', { keyword_count: selectedKeywordIds.length })
+              router.push('/step/3')
+            }}
             disabled={selectedKeywordIds.length === 0}
             size="lg"
           >

@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { useReelsStore } from '@/lib/store'
 import { GeneratedMusic } from '@/lib/types'
+import { track as trackEvent } from '@/lib/mixpanel'
 
 function formatDuration(sec: number) {
   return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`
@@ -21,7 +22,8 @@ export default function Step4Page() {
 
   const selectedTopic = topics.find((t) => t.id === selectedTopicId)
 
-  const generate = async () => {
+  const generate = async (isRegenerate = false) => {
+    trackEvent(isRegenerate ? 'Music Regenerated' : 'Music Generated', { topic_id: selectedTopicId })
     setLoading(true)
     try {
       const res = await fetch('/api/music', {
@@ -70,7 +72,7 @@ export default function Step4Page() {
             <circle cx="20" cy="24" r="2.5" stroke="currentColor" strokeWidth="1.5" />
           </svg>
           <p className="text-sm text-gray-400">아래 버튼을 눌러 배경음악을 생성하세요</p>
-          <Button onClick={generate}>음악 생성</Button>
+          <Button onClick={() => generate()}>음악 생성</Button>
         </div>
       )}
 
@@ -88,7 +90,10 @@ export default function Step4Page() {
             return (
               <button
                 key={track.id}
-                onClick={() => selectMusic(track.id)}
+                onClick={() => {
+                  trackEvent('Music Selected', { track_id: track.id, track_title: track.title, mood: track.mood })
+                  selectMusic(track.id)
+                }}
                 className={[
                   'w-full text-left p-5 border transition-colors flex items-center gap-5',
                   isSelected
@@ -142,7 +147,7 @@ export default function Step4Page() {
           })}
 
           <button
-            onClick={generate}
+            onClick={() => generate(true)}
             className="text-xs text-gray-400 hover:text-black font-mono pt-2 text-left transition-colors"
           >
             재생성 →
@@ -155,7 +160,10 @@ export default function Step4Page() {
           이전
         </Button>
         <Button
-          onClick={() => router.push('/step/complete')}
+          onClick={() => {
+            trackEvent('Reels Completed', { topic_id: selectedTopicId, music_id: selectedMusicId })
+            router.push('/step/complete')
+          }}
           disabled={!selectedMusicId}
           size="lg"
         >

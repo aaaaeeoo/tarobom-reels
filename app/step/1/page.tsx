@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { useReelsStore } from '@/lib/store'
 import { Topic } from '@/lib/types'
+import { track } from '@/lib/mixpanel'
 
 function formatViews(n: number) {
   if (n >= 10000) return `${(n / 10000).toFixed(1)}만`
@@ -30,6 +31,8 @@ export default function Step1Page() {
   }, [topics.length, setTopics])
 
   const handleNext = () => {
+    const topic = topics.find((t) => t.id === selectedTopicId)
+    track('Step 1 Next Clicked', { topic_id: selectedTopicId, topic_title: topic?.title })
     router.push('/step/2')
   }
 
@@ -58,7 +61,10 @@ export default function Step1Page() {
             return (
               <button
                 key={topic.id}
-                onClick={() => selectTopic(topic.id)}
+                onClick={() => {
+                  track('Topic Selected', { topic_id: topic.id, topic_title: topic.title })
+                  selectTopic(topic.id)
+                }}
                 className={[
                   'text-left w-full p-6 border transition-colors',
                   isSelected

@@ -1,4 +1,7 @@
+'use client'
+
 import Link from 'next/link'
+import { track } from '@/lib/mixpanel'
 
 const workflowSteps = [
   {
@@ -54,6 +57,7 @@ export default function HomePage() {
 
       <Link
         href="/step/1"
+        onClick={() => track('Session Started')}
         className="inline-flex items-center gap-3 bg-black text-white text-sm font-medium px-8 py-4 hover:bg-gray-800 transition-colors"
       >
         새 세션 시작

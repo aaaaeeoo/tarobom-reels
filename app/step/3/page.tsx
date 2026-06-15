@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { useReelsStore } from '@/lib/store'
 import { GeneratedImage } from '@/lib/types'
+import { track } from '@/lib/mixpanel'
 
 export default function Step3Page() {
   const router = useRouter()
@@ -22,8 +23,9 @@ export default function Step3Page() {
 
   const currentImage = images[0] ?? null
 
-  const generate = async () => {
+  const generate = async (isRegenerate = false) => {
     if (!selectedTopic) return
+    track(isRegenerate ? 'Image Regenerated' : 'Image Generated', { topic_id: selectedTopicId })
     setLoading(true)
     try {
       const res = await fetch('/api/image', {
@@ -115,18 +117,21 @@ export default function Step3Page() {
             이전
           </Button>
           {currentImage && (
-            <Button variant="secondary" onClick={generate} disabled={loading}>
+            <Button variant="secondary" onClick={() => generate(true)} disabled={loading}>
               재생성
             </Button>
           )}
           {!currentImage && (
-            <Button onClick={generate} disabled={loading}>
+            <Button onClick={() => generate()} disabled={loading}>
               {loading ? '생성 중...' : '이미지 생성'}
             </Button>
           )}
         </div>
         <Button
-          onClick={() => router.push('/step/4')}
+          onClick={() => {
+            track('Step 3 Next Clicked', { image_id: selectedImageId })
+            router.push('/step/4')
+          }}
           disabled={!selectedImageId}
           size="lg"
         >

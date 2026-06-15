@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { Header } from '@/components/layout/Header'
+import { MixpanelProvider } from '@/components/MixpanelProvider'
 
 export const metadata: Metadata = {
   title: '타로봄 릴스 자동화',
@@ -11,8 +12,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body className="bg-white text-black">
-        <Header />
-        <main className="pt-12 min-h-screen">{children}</main>
+        <MixpanelProvider>
+          <Header />
+          <main className="pt-12 min-h-screen">{children}</main>
+        </MixpanelProvider>
       </body>
     </html>
   )

@@ -12,14 +12,13 @@ import { track } from '@/lib/mixpanel'
 
 export default function Step3Page() {
   const router = useRouter()
-  const { topics, selectedTopicId, keywords, selectedKeywordIds, images, setImages, selectImage, selectedImageId } =
+  const { topics, selectedTopicId, keywords, selectedKeywordSetId, images, setImages, selectImage, selectedImageId } =
     useReelsStore()
   const [loading, setLoading] = useState(false)
 
   const selectedTopic = topics.find((t) => t.id === selectedTopicId)
-  const selectedKeywordTexts = keywords
-    .filter((k) => selectedKeywordIds.includes(k.id))
-    .map((k) => k.keyword)
+  const selectedSet = keywords.find((s) => s.id === selectedKeywordSetId)
+  const selectedKeywordTexts = selectedSet?.keywords ?? []
 
   const currentImage = images[0] ?? null
 

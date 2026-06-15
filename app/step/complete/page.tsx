@@ -13,7 +13,7 @@ export default function CompletePage() {
     topics,
     selectedTopicId,
     keywords,
-    selectedKeywordIds,
+    selectedKeywordSetId,
     images,
     selectedImageId,
     music,
@@ -22,7 +22,7 @@ export default function CompletePage() {
   } = useReelsStore()
 
   const topic = topics.find((t) => t.id === selectedTopicId)
-  const selectedKeywords = keywords.filter((k) => selectedKeywordIds.includes(k.id))
+  const selectedKeywordSet = keywords.find((s) => s.id === selectedKeywordSetId)
   const image = images.find((i) => i.id === selectedImageId)
   const track = music.find((m) => m.id === selectedMusicId)
 
@@ -44,7 +44,7 @@ export default function CompletePage() {
     },
     {
       label: 'DM 키워드',
-      content: selectedKeywords.map((k) => k.keyword).join(', '),
+      content: selectedKeywordSet?.keywords.join(', ') ?? '—',
     },
     {
       label: '이미지',
@@ -80,9 +80,9 @@ export default function CompletePage() {
         <div className="bg-white p-6">
           <span className="text-xs text-gray-400 font-mono block mb-3">DM 키워드</span>
           <div className="flex flex-wrap gap-1.5">
-            {selectedKeywords.map((k) => (
-              <Badge key={k.id} variant="outline">
-                {k.keyword}
+            {(selectedKeywordSet?.keywords ?? []).map((kw) => (
+              <Badge key={kw} variant="outline">
+                {kw}
               </Badge>
             ))}
           </div>

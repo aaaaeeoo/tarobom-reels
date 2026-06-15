@@ -8,11 +8,10 @@ export interface Topic {
   hashtags: string[]
 }
 
-export interface DMKeyword {
+export interface DMKeywordSet {
   id: string
   topicId: string
-  keyword: string
-  category: 'trigger' | 'interest' | 'engagement'
+  keywords: [string, string, string]
 }
 
 export interface GeneratedImage {

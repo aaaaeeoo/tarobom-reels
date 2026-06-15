@@ -4,22 +4,21 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { StepProgress } from '@/components/layout/StepProgress'
 import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { useReelsStore } from '@/lib/store'
-import { DMKeyword } from '@/lib/types'
+import { DMKeywordSet } from '@/lib/types'
 import { track } from '@/lib/mixpanel'
-
-const categoryLabel: Record<DMKeyword['category'], string> = {
-  trigger: 'DM 트리거',
-  interest: '관심사',
-  engagement: '참여 유도',
-}
 
 export default function Step2Page() {
   const router = useRouter()
-  const { topics, selectedTopicId, keywords, selectedKeywordIds, setKeywords, toggleKeyword } =
-    useReelsStore()
+  const {
+    topics,
+    selectedTopicId,
+    keywords,
+    selectedKeywordSetId,
+    setKeywords,
+    selectKeywordSet,
+  } = useReelsStore()
   const [loading, setLoading] = useState(keywords.length === 0)
 
   const selectedTopic = topics.find((t) => t.id === selectedTopicId)
@@ -32,17 +31,11 @@ export default function Step2Page() {
     if (keywords.length > 0) return
     fetch(`/api/keywords?topicId=${selectedTopicId}`)
       .then((r) => r.json())
-      .then((data: DMKeyword[]) => {
+      .then((data: DMKeywordSet[]) => {
         setKeywords(data)
         setLoading(false)
       })
   }, [selectedTopicId, keywords.length, setKeywords, router])
-
-  const grouped = (Object.keys(categoryLabel) as DMKeyword['category'][]).map((cat) => ({
-    category: cat,
-    label: categoryLabel[cat],
-    items: keywords.filter((k) => k.category === cat),
-  }))
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
@@ -51,9 +44,9 @@ export default function Step2Page() {
       </div>
 
       <div className="mb-8">
-        <h2 className="text-xl font-semibold tracking-tight mb-1.5">DM 키워드 추천</h2>
+        <h2 className="text-xl font-semibold tracking-tight mb-1.5">DM 키워드 세트 선택</h2>
         <p className="text-sm text-gray-500">
-          자동 DM 발송 트리거에 사용할 키워드를 선택하세요.
+          이미지 생성에 사용할 키워드 세트를 하나 선택하세요. 세트의 3개 키워드로 이미지가 만들어집니다.
         </p>
       </div>
 
@@ -67,49 +60,67 @@ export default function Step2Page() {
       {loading ? (
         <div className="flex flex-col items-center gap-3 py-24 text-gray-400">
           <Spinner size="lg" />
-          <span className="text-xs font-mono tracking-wider">키워드 생성 중...</span>
+          <span className="text-xs font-mono tracking-wider">키워드 세트 불러오는 중...</span>
         </div>
       ) : (
-        <div className="flex flex-col gap-6 animate-fade-in">
-          {grouped.map(({ category, label, items }) => (
-            <div key={category}>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-xs font-medium text-black">{label}</span>
-                <div className="flex-1 h-px bg-gray-100" />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {items.map((kw) => {
-                  const isSelected = selectedKeywordIds.includes(kw.id)
-                  return (
-                    <button
-                      key={kw.id}
-                      onClick={() => {
-                          const action = selectedKeywordIds.includes(kw.id) ? 'deselected' : 'selected'
-                          track('Keyword Toggled', { keyword: kw.keyword, action })
-                          toggleKeyword(kw.id)
-                        }}
-                      className={[
-                        'px-3 py-1.5 text-sm font-mono transition-colors border',
-                        isSelected
-                          ? 'bg-black text-white border-black'
-                          : 'bg-white text-black border-gray-200 hover:border-gray-400',
-                      ].join(' ')}
-                    >
-                      {kw.keyword}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-          ))}
+        <div className="flex flex-col gap-3 animate-fade-in">
+          {keywords.map((set) => {
+            const isSelected = selectedKeywordSetId === set.id
+            return (
+              <button
+                key={set.id}
+                onClick={() => {
+                  track('Keyword Set Selected', { set_id: set.id, keywords: set.keywords })
+                  selectKeywordSet(set.id)
+                }}
+                className={[
+                  'w-full text-left p-5 border transition-colors flex items-center justify-between gap-4',
+                  isSelected
+                    ? 'border-black bg-gray-50'
+                    : 'border-gray-200 hover:border-gray-400 bg-white',
+                ].join(' ')}
+              >
+                <div className="flex items-center gap-2 flex-wrap">
+                  {set.keywords.map((kw, i) => (
+                    <span key={kw} className="flex items-center gap-2">
+                      <span
+                        className={[
+                          'px-3 py-1 text-sm font-mono border',
+                          isSelected
+                            ? 'bg-black text-white border-black'
+                            : 'bg-white text-black border-gray-200',
+                        ].join(' ')}
+                      >
+                        {kw}
+                      </span>
+                      {i < 2 && (
+                        <span className="text-gray-300 text-xs">·</span>
+                      )}
+                    </span>
+                  ))}
+                </div>
+
+                <div
+                  className={[
+                    'w-4 h-4 border flex-shrink-0 flex items-center justify-center transition-colors',
+                    isSelected ? 'bg-black border-black' : 'border-gray-300',
+                  ].join(' ')}
+                >
+                  {isSelected && (
+                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                      <path d="M1.5 4L3.5 6L6.5 2" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </div>
+              </button>
+            )
+          })}
         </div>
       )}
 
       <div className="mt-8 flex items-center justify-between">
         <span className="text-xs text-gray-400 font-mono">
-          {selectedKeywordIds.length > 0
-            ? `${selectedKeywordIds.length}개 선택됨`
-            : '키워드를 선택하세요'}
+          {selectedKeywordSetId ? '세트 선택 완료' : '키워드 세트를 선택하세요'}
         </span>
         <div className="flex gap-3">
           <Button variant="secondary" onClick={() => router.push('/step/1')}>
@@ -117,10 +128,10 @@ export default function Step2Page() {
           </Button>
           <Button
             onClick={() => {
-              track('Step 2 Next Clicked', { keyword_count: selectedKeywordIds.length })
+              track('Step 2 Next Clicked', { keyword_set_id: selectedKeywordSetId })
               router.push('/step/3')
             }}
-            disabled={selectedKeywordIds.length === 0}
+            disabled={!selectedKeywordSetId}
             size="lg"
           >
             다음 단계

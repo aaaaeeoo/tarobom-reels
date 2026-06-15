@@ -1,13 +1,13 @@
 'use client'
 
 import { create } from 'zustand'
-import { Topic, DMKeyword, GeneratedImage, GeneratedMusic } from './types'
+import { Topic, DMKeywordSet, GeneratedImage, GeneratedMusic } from './types'
 
 interface ReelsStore {
   topics: Topic[]
   selectedTopicId: string | null
-  keywords: DMKeyword[]
-  selectedKeywordIds: string[]
+  keywords: DMKeywordSet[]
+  selectedKeywordSetId: string | null
   images: GeneratedImage[]
   selectedImageId: string | null
   music: GeneratedMusic[]
@@ -15,8 +15,8 @@ interface ReelsStore {
 
   setTopics: (topics: Topic[]) => void
   selectTopic: (id: string) => void
-  setKeywords: (keywords: DMKeyword[]) => void
-  toggleKeyword: (id: string) => void
+  setKeywords: (keywords: DMKeywordSet[]) => void
+  selectKeywordSet: (id: string) => void
   setImages: (images: GeneratedImage[]) => void
   selectImage: (id: string) => void
   setMusic: (music: GeneratedMusic[]) => void
@@ -28,7 +28,7 @@ const initialState = {
   topics: [],
   selectedTopicId: null,
   keywords: [],
-  selectedKeywordIds: [],
+  selectedKeywordSetId: null,
   images: [],
   selectedImageId: null,
   music: [],
@@ -41,12 +41,7 @@ export const useReelsStore = create<ReelsStore>((set) => ({
   setTopics: (topics) => set({ topics }),
   selectTopic: (id) => set({ selectedTopicId: id }),
   setKeywords: (keywords) => set({ keywords }),
-  toggleKeyword: (id) =>
-    set((state) => ({
-      selectedKeywordIds: state.selectedKeywordIds.includes(id)
-        ? state.selectedKeywordIds.filter((k) => k !== id)
-        : [...state.selectedKeywordIds, id],
-    })),
+  selectKeywordSet: (id) => set({ selectedKeywordSetId: id }),
   setImages: (images) => set({ images }),
   selectImage: (id) => set({ selectedImageId: id }),
   setMusic: (music) => set({ music }),

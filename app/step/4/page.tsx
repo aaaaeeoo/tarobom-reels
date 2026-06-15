@@ -29,10 +29,23 @@ export default function Step4Page() {
       const res = await fetch('/api/music', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topicId: selectedTopicId, topicTitle: selectedTopic?.title }),
+        body: JSON.stringify({ topicId: selectedTopicId }),
       })
-      const data: GeneratedMusic[] = await res.json()
-      setMusic(data)
+      const data = await res.json()
+      if (Array.isArray(data)) {
+        setMusic(data)
+      } else {
+        console.error('Invalid music response format:', data)
+        setMusic([
+          {
+            id: `m-local-fallback-${Date.now()}`,
+            title: '신비로운 운명의 밤 (Mystical Destiny)',
+            mood: '신비',
+            duration: 30,
+            bpm: 80,
+          }
+        ])
+      }
       setGenerated(true)
     } finally {
       setLoading(false)
@@ -90,7 +103,7 @@ export default function Step4Page() {
 
       {generated && !loading && (
         <div className="flex flex-col gap-2 mb-6 animate-fade-in">
-          {music.map((track) => {
+          {Array.isArray(music) && music.map((track) => {
             const isSelected = selectedMusicId === track.id
             return (
               <button

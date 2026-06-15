@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { useReelsStore } from '@/lib/store'
 import { track as trackEvent } from '@/lib/mixpanel'
-import { keywordImageMap } from '@/lib/keywordImages'
 
 async function triggerDownload(href: string, filename: string) {
   const a = document.createElement('a')
@@ -62,15 +61,19 @@ export default function CompletePage() {
       await triggerDownload(textUrl, `타로봄_릴스_요약_${dateStr}.txt`)
       URL.revokeObjectURL(textUrl)
 
-      // 이미지 3장 다운로드
+      // 썸네일 1장 다운로드 (검정 배경 + 이미지 3장 합성)
       const kwds = selectedKeywordSet?.keywords ?? []
-      for (let i = 0; i < kwds.length; i++) {
-        const kw = kwds[i]
-        const imageUrl = keywordImageMap[kw]
-        if (!imageUrl) continue
+      if (kwds.length === 3) {
         await new Promise((r) => setTimeout(r, 300))
-        const proxyUrl = `/api/download-image?url=${encodeURIComponent(imageUrl)}&filename=${encodeURIComponent(`릴스_이미지_${i + 1}_${kw}.jpg`)}`
-        await triggerDownload(proxyUrl, `릴스_이미지_${i + 1}_${kw}.jpg`)
+        const thumbRes = await fetch('/api/download-thumbnail', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ keywords: kwds }),
+        })
+        const thumbBlob = await thumbRes.blob()
+        const thumbUrl = URL.createObjectURL(thumbBlob)
+        await triggerDownload(thumbUrl, `릴스_썸네일.jpg`)
+        URL.revokeObjectURL(thumbUrl)
       }
 
       // 음악 다운로드 (Gemini가 생성한 경우에만)

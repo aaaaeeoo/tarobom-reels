@@ -1,15 +1,24 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ReelsThumbnail } from '@/components/ui/ReelsThumbnail'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { useReelsStore } from '@/lib/store'
 import { track as trackEvent } from '@/lib/mixpanel'
+import { keywordImageMap } from '@/lib/keywordImages'
+
+async function triggerDownload(href: string, filename: string) {
+  const a = document.createElement('a')
+  a.href = href
+  a.download = filename
+  a.click()
+}
 
 export default function CompletePage() {
   const router = useRouter()
+  const [downloading, setDownloading] = useState(false)
   const {
     topics,
     selectedTopicId,
@@ -26,6 +35,47 @@ export default function CompletePage() {
   const selectedKeywordSet = keywords.find((s) => s.id === selectedKeywordSetId)
   const image = images.find((i) => i.id === selectedImageId)
   const track = music.find((m) => m.id === selectedMusicId)
+
+  const handleDownload = async () => {
+    trackEvent('Download Clicked', { topic_id: selectedTopicId })
+    setDownloading(true)
+    try {
+      const dateStr = new Date().toLocaleDateString('ko-KR').replace(/\. /g, '-').replace('.', '')
+
+      // 텍스트 요약 다운로드
+      const summary = [
+        '타로봄 릴스 소재 요약',
+        `생성일: ${new Date().toLocaleDateString('ko-KR')}`,
+        '',
+        '[선택 주제]',
+        topic?.title ?? '—',
+        '',
+        '[DM 키워드]',
+        selectedKeywordSet?.keywords.join(' / ') ?? '—',
+        '',
+        '[배경음악]',
+        track ? `${track.title} (${track.mood} · ${track.bpm} BPM)` : '—',
+      ].join('\n')
+
+      const textBlob = new Blob([summary], { type: 'text/plain;charset=utf-8' })
+      const textUrl = URL.createObjectURL(textBlob)
+      await triggerDownload(textUrl, `타로봄_릴스_요약_${dateStr}.txt`)
+      URL.revokeObjectURL(textUrl)
+
+      // 이미지 3장 다운로드
+      const kwds = selectedKeywordSet?.keywords ?? []
+      for (let i = 0; i < kwds.length; i++) {
+        const kw = kwds[i]
+        const imageUrl = keywordImageMap[kw]
+        if (!imageUrl) continue
+        await new Promise((r) => setTimeout(r, 300))
+        const proxyUrl = `/api/download-image?url=${encodeURIComponent(imageUrl)}&filename=${encodeURIComponent(`릴스_이미지_${i + 1}_${kw}.jpg`)}`
+        await triggerDownload(proxyUrl, `릴스_이미지_${i + 1}_${kw}.jpg`)
+      }
+    } finally {
+      setDownloading(false)
+    }
+  }
 
   const handleNewSession = () => {
     trackEvent('New Session Started', { from: 'complete' })
@@ -123,18 +173,23 @@ export default function CompletePage() {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3">
-        <Button
-          size="lg"
-          onClick={() => {
-            trackEvent('Download Clicked', { topic_id: selectedTopicId })
-            alert('실제 서비스 연동 시 파일 다운로드가 실행됩니다.')
-          }}
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M7 2V9M7 9L4 6M7 9L10 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M2 11H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-          전체 소재 다운로드
+        <Button size="lg" onClick={handleDownload} disabled={downloading}>
+          {downloading ? (
+            <>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="animate-spin">
+                <circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.5" strokeDasharray="8 6" />
+              </svg>
+              다운로드 중...
+            </>
+          ) : (
+            <>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 2V9M7 9L4 6M7 9L10 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M2 11H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+              전체 소재 다운로드
+            </>
+          )}
         </Button>
         <Button variant="secondary" size="lg" onClick={handleNewSession}>
           새 세션 시작

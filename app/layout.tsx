@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { MixpanelProvider } from '@/components/MixpanelProvider'
-import { TDSMobileAITProvider } from '@toss/tds-mobile-ait'
+import { TDSProvider } from '@/components/TDSProvider'
 
 export const metadata: Metadata = {
   title: '타로봄 릴스 자동화',
@@ -13,12 +13,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body className="bg-white text-black">
-        <TDSMobileAITProvider>
+        <TDSProvider>
           <MixpanelProvider>
             <Header />
             <main className="pt-12 min-h-screen">{children}</main>
           </MixpanelProvider>
-        </TDSMobileAITProvider>
+        </TDSProvider>
       </body>
     </html>
   )

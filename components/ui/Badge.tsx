@@ -1,18 +1,23 @@
+'use client'
+
+import { Badge as TDSBadge } from '@toss/tds-mobile'
+
 interface BadgeProps {
   children: React.ReactNode
   variant?: 'default' | 'outline' | 'muted'
 }
 
-const variantClass = {
-  default: 'bg-black text-white',
-  outline: 'border border-black text-black',
-  muted: 'bg-gray-100 text-gray-600',
-}
+const variantMap = {
+  default: { variant: 'fill', color: 'blue' },
+  outline: { variant: 'weak', color: 'blue' },
+  muted:   { variant: 'weak', color: 'elephant' },
+} as const
 
 export function Badge({ children, variant = 'muted' }: BadgeProps) {
+  const { variant: tdsVariant, color } = variantMap[variant]
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 text-xs font-medium tracking-wide ${variantClass[variant]}`}>
+    <TDSBadge variant={tdsVariant} color={color} size="xsmall">
       {children}
-    </span>
+    </TDSBadge>
   )
 }

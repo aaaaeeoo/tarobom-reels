@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ReelsThumbnail } from '@/components/ui/ReelsThumbnail'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@toss/tds-mobile'
 import { Badge } from '@/components/ui/Badge'
 import { useReelsStore } from '@/lib/store'
 import { track as trackEvent } from '@/lib/mixpanel'
@@ -188,7 +188,7 @@ export default function CompletePage() {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3">
-        <Button size="lg" onClick={handleDownload} disabled={downloading}>
+        <Button size="large" onClick={handleDownload} disabled={downloading}>
           {downloading ? (
             <>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="animate-spin">
@@ -206,7 +206,7 @@ export default function CompletePage() {
             </>
           )}
         </Button>
-        <Button variant="secondary" size="lg" onClick={handleNewSession}>
+        <Button variant="weak" size="large" onClick={handleNewSession}>
           새 세션 시작
         </Button>
       </div>

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { StepProgress } from '@/components/layout/StepProgress'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@toss/tds-mobile'
 import { Spinner } from '@/components/ui/Spinner'
 import { useReelsStore } from '@/lib/store'
 import { DMKeywordSet } from '@/lib/types'
@@ -123,7 +123,7 @@ export default function Step2Page() {
           {selectedKeywordSetId ? '세트 선택 완료' : '키워드 세트를 선택하세요'}
         </span>
         <div className="flex gap-3">
-          <Button variant="secondary" onClick={() => router.push('/step/1')}>
+          <Button variant="weak" onClick={() => router.push('/step/1')}>
             이전
           </Button>
           <Button
@@ -132,7 +132,7 @@ export default function Step2Page() {
               router.push('/step/3')
             }}
             disabled={!selectedKeywordSetId}
-            size="lg"
+            size="large"
           >
             다음 단계
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">

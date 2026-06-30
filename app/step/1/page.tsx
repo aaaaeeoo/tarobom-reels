@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { StepProgress } from '@/components/layout/StepProgress'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@toss/tds-mobile'
 import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { useReelsStore } from '@/lib/store'
@@ -111,7 +111,7 @@ export default function Step1Page() {
       )}
 
       <div className="mt-8 flex justify-end">
-        <Button onClick={handleNext} disabled={!selectedTopicId} size="lg">
+        <Button onClick={handleNext} disabled={!selectedTopicId} size="large">
           다음 단계
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

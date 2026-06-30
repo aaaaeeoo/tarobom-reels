@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { StepProgress } from '@/components/layout/StepProgress'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@toss/tds-mobile'
 import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { useReelsStore } from '@/lib/store'
@@ -174,7 +174,7 @@ export default function Step4Page() {
       )}
 
       <div className="flex items-center justify-between">
-        <Button variant="secondary" onClick={() => router.push('/step/3')}>
+        <Button variant="weak" onClick={() => router.push('/step/3')}>
           이전
         </Button>
         <Button
@@ -183,7 +183,7 @@ export default function Step4Page() {
             router.push('/step/complete')
           }}
           disabled={!selectedMusicId}
-          size="lg"
+          size="large"
         >
           완성하기
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">

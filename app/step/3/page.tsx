@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { StepProgress } from '@/components/layout/StepProgress'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@toss/tds-mobile'
 import { Spinner } from '@/components/ui/Spinner'
 import { ReelsThumbnail } from '@/components/ui/ReelsThumbnail'
 import { useReelsStore } from '@/lib/store'
@@ -109,11 +109,11 @@ export default function Step3Page() {
 
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => router.push('/step/2')}>
+          <Button variant="weak" onClick={() => router.push('/step/2')}>
             이전
           </Button>
           {currentImage && (
-            <Button variant="secondary" onClick={() => generate(true)} disabled={loading}>
+            <Button variant="weak" onClick={() => generate(true)} disabled={loading}>
               재생성
             </Button>
           )}
@@ -129,7 +129,7 @@ export default function Step3Page() {
             router.push('/step/4')
           }}
           disabled={!selectedImageId}
-          size="lg"
+          size="large"
         >
           다음 단계
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">

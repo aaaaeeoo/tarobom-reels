@@ -1,3 +1,7 @@
+'use client'
+
+import { Paragraph } from '@toss/tds-mobile'
+
 interface StepProgressProps {
   currentStep: number
 }
@@ -21,7 +25,7 @@ export function StepProgress({ currentStep }: StepProgressProps) {
             <div className="flex flex-col items-center gap-1.5">
               <div
                 className={[
-                  'w-7 h-7 flex items-center justify-center text-xs font-medium transition-colors',
+                  'w-7 h-7 flex items-center justify-center transition-colors',
                   isDone
                     ? 'bg-black text-white'
                     : isActive
@@ -34,16 +38,19 @@ export function StepProgress({ currentStep }: StepProgressProps) {
                     <path d="M2 6L5 9L10 3" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 ) : (
-                  step.n
+                  <Paragraph.Text typography="st12" fontWeight="medium">
+                    {step.n}
+                  </Paragraph.Text>
                 )}
               </div>
-              <span
-                className={`text-xs whitespace-nowrap ${
-                  isActive ? 'text-black font-medium' : isDone ? 'text-gray-400' : 'text-gray-300'
-                }`}
+              <Paragraph.Text
+                typography="st12"
+                fontWeight={isActive ? 'medium' : 'regular'}
+                color={isActive ? 'var(--adaptiveGrey900)' : isDone ? 'var(--adaptiveGrey400)' : 'var(--adaptiveGrey300)'}
+                className="whitespace-nowrap"
               >
                 {step.label}
-              </span>
+              </Paragraph.Text>
             </div>
 
             {idx < steps.length - 1 && (

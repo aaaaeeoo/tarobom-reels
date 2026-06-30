@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { Paragraph, Button } from '@toss/tds-mobile'
 import { StepProgress } from '@/components/layout/StepProgress'
-import { Button } from '@toss/tds-mobile'
 import { Spinner } from '@/components/ui/Spinner'
 import { ReelsThumbnail } from '@/components/ui/ReelsThumbnail'
 import { useReelsStore } from '@/lib/store'
@@ -61,21 +61,31 @@ export default function Step3Page() {
       </div>
 
       <div className="mb-8">
-        <h2 className="text-xl font-semibold tracking-tight mb-1.5">이미지 생성</h2>
-        <p className="text-sm text-gray-500">
+        <Paragraph as="h2" typography="t4" fontWeight="bold" color="var(--adaptiveGrey900)" className="tracking-tight mb-1.5">
+          이미지 생성
+        </Paragraph>
+        <Paragraph typography="st11" color="var(--adaptiveGrey500)">
           선택한 주제와 키워드를 바탕으로 릴스 썸네일 이미지를 생성합니다.
-        </p>
+        </Paragraph>
       </div>
 
       <div className="mb-6 p-4 border border-gray-100 bg-gray-50">
         <div className="flex flex-col gap-1.5">
-          <div className="flex gap-3 text-xs">
-            <span className="text-gray-400 font-mono w-12 flex-shrink-0">주제</span>
-            <span className="text-black">{selectedTopic?.title}</span>
+          <div className="flex gap-3">
+            <Paragraph.Text typography="st12" color="var(--adaptiveGrey400)" className="font-mono w-12 flex-shrink-0">
+              주제
+            </Paragraph.Text>
+            <Paragraph.Text typography="st12" color="var(--adaptiveGrey900)">
+              {selectedTopic?.title}
+            </Paragraph.Text>
           </div>
-          <div className="flex gap-3 text-xs">
-            <span className="text-gray-400 font-mono w-12 flex-shrink-0">키워드</span>
-            <span className="text-black font-mono">{selectedKeywordTexts.join(' · ')}</span>
+          <div className="flex gap-3">
+            <Paragraph.Text typography="st12" color="var(--adaptiveGrey400)" className="font-mono w-12 flex-shrink-0">
+              키워드
+            </Paragraph.Text>
+            <Paragraph.Text typography="st12" color="var(--adaptiveGrey900)" className="font-mono">
+              {selectedKeywordTexts.join(' · ')}
+            </Paragraph.Text>
           </div>
         </div>
       </div>
@@ -84,7 +94,9 @@ export default function Step3Page() {
         {loading ? (
           <div className="flex flex-col items-center gap-3 py-32 border border-dashed border-gray-200">
             <Spinner size="lg" />
-            <span className="text-xs font-mono text-gray-400 tracking-wider">이미지 생성 중...</span>
+            <Paragraph.Text typography="st12" color="var(--adaptiveGrey400)" className="font-mono tracking-wider">
+              이미지 생성 중...
+            </Paragraph.Text>
           </div>
         ) : currentImage ? (
           <div className="animate-fade-in">
@@ -92,9 +104,9 @@ export default function Step3Page() {
               <ReelsThumbnail keywords={selectedKeywordTexts} className="w-full h-full" />
             </div>
             <div className="mt-3 p-3 bg-gray-50 border border-gray-100">
-              <p className="text-xs text-gray-400 font-mono leading-relaxed">
+              <Paragraph typography="st12" color="var(--adaptiveGrey400)" className="font-mono leading-relaxed">
                 프롬프트: {currentImage.prompt}
-              </p>
+              </Paragraph>
             </div>
           </div>
         ) : (
@@ -102,7 +114,9 @@ export default function Step3Page() {
             <div className="relative w-full aspect-[4/5] bg-black overflow-hidden rounded-lg">
               <ReelsThumbnail showPlaceholder={true} className="w-full h-full" />
             </div>
-            <p className="text-xs text-gray-400 text-center">아래 버튼을 눌러 이미지를 생성하세요</p>
+            <Paragraph typography="st12" color="var(--adaptiveGrey400)" className="text-center">
+              아래 버튼을 눌러 이미지를 생성하세요
+            </Paragraph>
           </div>
         )}
       </div>

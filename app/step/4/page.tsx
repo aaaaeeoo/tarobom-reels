@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { Paragraph, Button } from '@toss/tds-mobile'
 import { StepProgress } from '@/components/layout/StepProgress'
-import { Button } from '@toss/tds-mobile'
 import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { useReelsStore } from '@/lib/store'
@@ -69,15 +69,21 @@ export default function Step4Page() {
       </div>
 
       <div className="mb-8">
-        <h2 className="text-xl font-semibold tracking-tight mb-1.5">배경음악 생성</h2>
-        <p className="text-sm text-gray-500">
+        <Paragraph as="h2" typography="t4" fontWeight="bold" color="var(--adaptiveGrey900)" className="tracking-tight mb-1.5">
+          배경음악 생성
+        </Paragraph>
+        <Paragraph typography="st11" color="var(--adaptiveGrey500)">
           주제 분위기에 맞는 배경음악을 생성하고 하나를 선택하세요.
-        </p>
+        </Paragraph>
       </div>
 
       <div className="mb-6 px-4 py-3 border border-gray-100 bg-gray-50 flex items-center gap-3">
-        <span className="text-xs text-gray-400 font-mono">선택 주제</span>
-        <span className="text-sm font-medium">{selectedTopic?.title}</span>
+        <Paragraph.Text typography="st12" color="var(--adaptiveGrey400)" className="font-mono">
+          선택 주제
+        </Paragraph.Text>
+        <Paragraph.Text typography="st11" fontWeight="medium" color="var(--adaptiveGrey900)">
+          {selectedTopic?.title}
+        </Paragraph.Text>
       </div>
 
       {!generated && !loading && (
@@ -89,7 +95,9 @@ export default function Step4Page() {
             <circle cx="12" cy="24" r="2.5" stroke="currentColor" strokeWidth="1.5" />
             <circle cx="20" cy="24" r="2.5" stroke="currentColor" strokeWidth="1.5" />
           </svg>
-          <p className="text-sm text-gray-400">아래 버튼을 눌러 배경음악을 생성하세요</p>
+          <Paragraph typography="st11" color="var(--adaptiveGrey400)">
+            아래 버튼을 눌러 배경음악을 생성하세요
+          </Paragraph>
           <Button onClick={() => generate()}>음악 생성</Button>
         </div>
       )}
@@ -97,7 +105,9 @@ export default function Step4Page() {
       {loading && (
         <div className="flex flex-col items-center gap-3 py-24 border border-dashed border-gray-200 mb-6">
           <Spinner size="lg" />
-          <span className="text-xs font-mono text-gray-400 tracking-wider">음악 생성 중...</span>
+          <Paragraph.Text typography="st12" color="var(--adaptiveGrey400)" className="font-mono tracking-wider">
+            음악 생성 중...
+          </Paragraph.Text>
         </div>
       )}
 
@@ -138,13 +148,17 @@ export default function Step4Page() {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium mb-1.5">{track.title}</p>
+                  <Paragraph typography="st11" fontWeight="medium" color="var(--adaptiveGrey900)" className="mb-1.5">
+                    {track.title}
+                  </Paragraph>
                   <div className="flex items-center gap-2">
                     <Badge variant={isSelected ? 'default' : 'muted'}>{track.mood}</Badge>
-                    <span className="text-xs font-mono text-gray-400">{track.bpm} BPM</span>
-                    <span className="text-xs font-mono text-gray-400">
+                    <Paragraph.Text typography="st12" color="var(--adaptiveGrey400)" className="font-mono">
+                      {track.bpm} BPM
+                    </Paragraph.Text>
+                    <Paragraph.Text typography="st12" color="var(--adaptiveGrey400)" className="font-mono">
                       {formatDuration(track.duration)}
-                    </span>
+                    </Paragraph.Text>
                   </div>
                 </div>
 
@@ -166,9 +180,11 @@ export default function Step4Page() {
 
           <button
             onClick={() => generate(true)}
-            className="text-xs text-gray-400 hover:text-black font-mono pt-2 text-left transition-colors"
+            className="pt-2 text-left transition-colors"
           >
-            재생성 →
+            <Paragraph.Text typography="st12" color="var(--adaptiveGrey400)" className="font-mono hover:text-black">
+              재생성 →
+            </Paragraph.Text>
           </button>
         </div>
       )}

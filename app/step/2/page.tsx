@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Paragraph, Button } from '@toss/tds-mobile'
 import { StepProgress } from '@/components/layout/StepProgress'
-import { Button } from '@toss/tds-mobile'
 import { Spinner } from '@/components/ui/Spinner'
 import { useReelsStore } from '@/lib/store'
 import { DMKeywordSet } from '@/lib/types'
@@ -44,23 +44,31 @@ export default function Step2Page() {
       </div>
 
       <div className="mb-8">
-        <h2 className="text-xl font-semibold tracking-tight mb-1.5">DM 키워드 세트 선택</h2>
-        <p className="text-sm text-gray-500">
+        <Paragraph as="h2" typography="t4" fontWeight="bold" color="var(--adaptiveGrey900)" className="tracking-tight mb-1.5">
+          DM 키워드 세트 선택
+        </Paragraph>
+        <Paragraph typography="st11" color="var(--adaptiveGrey500)">
           이미지 생성에 사용할 키워드 세트를 하나 선택하세요. 세트의 3개 키워드로 이미지가 만들어집니다.
-        </p>
+        </Paragraph>
       </div>
 
       {selectedTopic && (
         <div className="mb-6 px-4 py-3 border border-gray-200 bg-gray-50 flex items-center gap-3">
-          <span className="text-xs text-gray-400 font-mono">선택 주제</span>
-          <span className="text-sm font-medium">{selectedTopic.title}</span>
+          <Paragraph.Text typography="st12" color="var(--adaptiveGrey400)" className="font-mono">
+            선택 주제
+          </Paragraph.Text>
+          <Paragraph.Text typography="st11" fontWeight="medium" color="var(--adaptiveGrey900)">
+            {selectedTopic.title}
+          </Paragraph.Text>
         </div>
       )}
 
       {loading ? (
         <div className="flex flex-col items-center gap-3 py-24 text-gray-400">
           <Spinner size="lg" />
-          <span className="text-xs font-mono tracking-wider">키워드 세트 불러오는 중...</span>
+          <Paragraph.Text typography="st12" color="var(--adaptiveGrey400)" className="font-mono tracking-wider">
+            키워드 세트 불러오는 중...
+          </Paragraph.Text>
         </div>
       ) : (
         <div className="flex flex-col gap-3 animate-fade-in">
@@ -85,16 +93,18 @@ export default function Step2Page() {
                     <span key={kw} className="flex items-center gap-2">
                       <span
                         className={[
-                          'px-3 py-1 text-sm font-mono border',
+                          'px-3 py-1 border',
                           isSelected
                             ? 'bg-black text-white border-black'
                             : 'bg-white text-black border-gray-200',
                         ].join(' ')}
                       >
-                        {kw}
+                        <Paragraph.Text typography="st11" fontWeight="medium" className="font-mono">
+                          {kw}
+                        </Paragraph.Text>
                       </span>
                       {i < 2 && (
-                        <span className="text-gray-300 text-xs">·</span>
+                        <Paragraph.Text typography="st12" color="var(--adaptiveGrey300)">·</Paragraph.Text>
                       )}
                     </span>
                   ))}
@@ -119,9 +129,13 @@ export default function Step2Page() {
       )}
 
       <div className="mt-8 flex items-center justify-between">
-        <span className="text-xs text-gray-400 font-mono">
+        <Paragraph.Text
+          typography="st12"
+          color={selectedKeywordSetId ? 'var(--adaptiveGrey900)' : 'var(--adaptiveGrey400)'}
+          className="font-mono"
+        >
           {selectedKeywordSetId ? '세트 선택 완료' : '키워드 세트를 선택하세요'}
-        </span>
+        </Paragraph.Text>
         <div className="flex gap-3">
           <Button variant="weak" onClick={() => router.push('/step/1')}>
             이전

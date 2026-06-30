@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Paragraph, Button } from '@toss/tds-mobile'
 import { StepProgress } from '@/components/layout/StepProgress'
-import { Button } from '@toss/tds-mobile'
 import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { useReelsStore } from '@/lib/store'
@@ -43,16 +43,20 @@ export default function Step1Page() {
       </div>
 
       <div className="mb-8">
-        <h2 className="text-xl font-semibold tracking-tight mb-1.5">릴스 주제 추천</h2>
-        <p className="text-sm text-gray-500">
+        <Paragraph as="h2" typography="t4" fontWeight="bold" color="var(--adaptiveGrey900)" className="tracking-tight mb-1.5">
+          릴스 주제 추천
+        </Paragraph>
+        <Paragraph typography="st11" color="var(--adaptiveGrey500)">
           경쟁사 릴스 분석 데이터 기반으로 추천합니다. 주제 하나를 선택하세요.
-        </p>
+        </Paragraph>
       </div>
 
       {loading ? (
         <div className="flex flex-col items-center gap-3 py-24 text-gray-400">
           <Spinner size="lg" />
-          <span className="text-xs font-mono tracking-wider">경쟁사 데이터 분석 중...</span>
+          <Paragraph.Text typography="st12" color="var(--adaptiveGrey400)" className="font-mono tracking-wider">
+            경쟁사 데이터 분석 중...
+          </Paragraph.Text>
         </div>
       ) : (
         <div className="flex flex-col gap-3 animate-fade-in">
@@ -73,7 +77,9 @@ export default function Step1Page() {
                 ].join(' ')}
               >
                 <div className="flex items-start justify-between gap-4 mb-3">
-                  <span className="text-sm font-medium leading-snug">{topic.title}</span>
+                  <Paragraph.Text typography="st11" fontWeight="medium" color="var(--adaptiveGrey900)" className="leading-snug">
+                    {topic.title}
+                  </Paragraph.Text>
                   <div
                     className={[
                       'w-4 h-4 border mt-0.5 flex-shrink-0 flex items-center justify-center transition-colors',
@@ -88,10 +94,14 @@ export default function Step1Page() {
                   </div>
                 </div>
 
-                <p className="text-xs text-gray-500 leading-relaxed mb-4">{topic.description}</p>
+                <Paragraph typography="st12" color="var(--adaptiveGrey500)" className="leading-relaxed mb-4">
+                  {topic.description}
+                </Paragraph>
 
                 <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <span className="text-xs font-mono text-gray-400">{topic.sourceAccount}</span>
+                  <Paragraph.Text typography="st12" color="var(--adaptiveGrey400)" className="font-mono">
+                    {topic.sourceAccount}
+                  </Paragraph.Text>
                   <span className="text-gray-200">|</span>
                   <Badge variant="default">조회 {formatViews(topic.views)}</Badge>
                   <Badge variant="outline">참여율 {topic.engagementRate}%</Badge>
@@ -99,9 +109,9 @@ export default function Step1Page() {
 
                 <div className="flex flex-wrap gap-1.5">
                   {topic.hashtags.map((tag) => (
-                    <span key={tag} className="text-xs text-gray-400 font-mono">
+                    <Paragraph.Text key={tag} typography="st12" color="var(--adaptiveGrey400)" className="font-mono">
                       #{tag}
-                    </span>
+                    </Paragraph.Text>
                   ))}
                 </div>
               </button>

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Paragraph, Button } from '@toss/tds-mobile'
 import { ReelsThumbnail } from '@/components/ui/ReelsThumbnail'
-import { Button } from '@toss/tds-mobile'
 import { Badge } from '@/components/ui/Badge'
 import { useReelsStore } from '@/lib/store'
 import { track as trackEvent } from '@/lib/mixpanel'
@@ -41,7 +41,6 @@ export default function CompletePage() {
     try {
       const dateStr = new Date().toLocaleDateString('ko-KR').replace(/\. /g, '-').replace('.', '')
 
-      // 텍스트 요약 다운로드
       const summary = [
         '타로봄 릴스 소재 요약',
         `생성일: ${new Date().toLocaleDateString('ko-KR')}`,
@@ -61,7 +60,6 @@ export default function CompletePage() {
       await triggerDownload(textUrl, `타로봄_릴스_요약_${dateStr}.txt`)
       URL.revokeObjectURL(textUrl)
 
-      // 썸네일 1장 다운로드 (검정 배경 + 이미지 3장 합성)
       const kwds = selectedKeywordSet?.keywords ?? []
       if (kwds.length === 3) {
         await new Promise((r) => setTimeout(r, 300))
@@ -76,7 +74,6 @@ export default function CompletePage() {
         URL.revokeObjectURL(thumbUrl)
       }
 
-      // 음악 다운로드 (Gemini가 생성한 경우에만)
       if (track?.audioBase64) {
         await new Promise((r) => setTimeout(r, 300))
         const audioBlob = new Blob(
@@ -108,26 +105,6 @@ export default function CompletePage() {
     return null
   }
 
-  const summaryItems = [
-    {
-      label: '선택 주제',
-      content: topic.title,
-    },
-    {
-      label: 'DM 키워드',
-      content: selectedKeywordSet?.keywords.join(', ') ?? '—',
-    },
-    {
-      label: '이미지',
-      content: image ? '생성 완료' : '—',
-      hasImage: true,
-    },
-    {
-      label: '배경음악',
-      content: track ? `${track.title} (${track.mood} · ${track.bpm} BPM)` : '—',
-    },
-  ]
-
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
       <div className="mb-12 flex items-center gap-4">
@@ -137,19 +114,29 @@ export default function CompletePage() {
           </svg>
         </div>
         <div>
-          <h2 className="text-xl font-semibold tracking-tight">제작이 완료되었습니다</h2>
-          <p className="text-sm text-gray-500 mt-0.5">릴스 소재가 준비되었습니다. 아래에서 확인하고 다운로드하세요.</p>
+          <Paragraph as="h2" typography="t4" fontWeight="bold" color="var(--adaptiveGrey900)" className="tracking-tight">
+            제작이 완료되었습니다
+          </Paragraph>
+          <Paragraph typography="st11" color="var(--adaptiveGrey500)" className="mt-0.5">
+            릴스 소재가 준비되었습니다. 아래에서 확인하고 다운로드하세요.
+          </Paragraph>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-px bg-gray-200 border border-gray-200 mb-8">
         <div className="bg-white p-6 col-span-2">
-          <span className="text-xs text-gray-400 font-mono block mb-2">선택 주제</span>
-          <p className="text-sm font-medium">{topic.title}</p>
+          <Paragraph typography="st12" color="var(--adaptiveGrey400)" className="font-mono mb-2">
+            선택 주제
+          </Paragraph>
+          <Paragraph typography="st11" fontWeight="medium" color="var(--adaptiveGrey900)">
+            {topic.title}
+          </Paragraph>
         </div>
 
         <div className="bg-white p-6">
-          <span className="text-xs text-gray-400 font-mono block mb-3">DM 키워드</span>
+          <Paragraph typography="st12" color="var(--adaptiveGrey400)" className="font-mono mb-3">
+            DM 키워드
+          </Paragraph>
           <div className="flex flex-wrap gap-1.5">
             {(selectedKeywordSet?.keywords ?? []).map((kw) => (
               <Badge key={kw} variant="outline">
@@ -160,23 +147,31 @@ export default function CompletePage() {
         </div>
 
         <div className="bg-white p-6">
-          <span className="text-xs text-gray-400 font-mono block mb-3">배경음악</span>
+          <Paragraph typography="st12" color="var(--adaptiveGrey400)" className="font-mono mb-3">
+            배경음악
+          </Paragraph>
           {track ? (
             <div>
-              <p className="text-sm font-medium mb-1">{track.title}</p>
+              <Paragraph typography="st11" fontWeight="medium" color="var(--adaptiveGrey900)" className="mb-1">
+                {track.title}
+              </Paragraph>
               <div className="flex items-center gap-2">
                 <Badge variant="muted">{track.mood}</Badge>
-                <span className="text-xs font-mono text-gray-400">{track.bpm} BPM</span>
+                <Paragraph.Text typography="st12" color="var(--adaptiveGrey400)" className="font-mono">
+                  {track.bpm} BPM
+                </Paragraph.Text>
               </div>
             </div>
           ) : (
-            <span className="text-sm text-gray-400">—</span>
+            <Paragraph typography="st11" color="var(--adaptiveGrey400)">—</Paragraph>
           )}
         </div>
 
         {image && (
           <div className="bg-white p-6 col-span-2">
-            <span className="text-xs text-gray-400 font-mono block mb-3">생성 이미지</span>
+            <Paragraph typography="st12" color="var(--adaptiveGrey400)" className="font-mono mb-3">
+              생성 이미지
+            </Paragraph>
             <div className="relative w-48 aspect-[4/5] overflow-hidden bg-black rounded-lg">
               <ReelsThumbnail
                 keywords={selectedKeywordSet?.keywords ?? []}

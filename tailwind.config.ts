@@ -8,6 +8,22 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        black: 'var(--adaptiveGrey900)',
+        white: 'var(--adaptiveBackground)',
+        gray: {
+          50:  'var(--adaptiveGrey50)',
+          100: 'var(--adaptiveGrey100)',
+          200: 'var(--adaptiveGrey200)',
+          300: 'var(--adaptiveGrey300)',
+          400: 'var(--adaptiveGrey400)',
+          500: 'var(--adaptiveGrey500)',
+          600: 'var(--adaptiveGrey600)',
+          700: 'var(--adaptiveGrey700)',
+          800: 'var(--adaptiveGrey800)',
+          900: 'var(--adaptiveGrey900)',
+        },
+      },
       fontFamily: {
         sans: ['system-ui', '-apple-system', 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'monospace'],
